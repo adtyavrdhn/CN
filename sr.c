@@ -24,7 +24,7 @@ int main(void){
         if(nac==i){
             printf("No NACK recieved, All frames sent successfully\n");
             i+= w;
-            continue;;
+            continue;
         }
 
         printf("NACK: %d\n",nac);
