@@ -1,77 +1,71 @@
 #include <stdio.h>
 #include <string.h>
+void f(char c, char s[]){
+    char net[20], host[20];
 
+    if(c>='D'){
+        printf("No sepeartion of network and host id\n");
+        return;
+    }
+
+    int dots = c-'A' + 1;
+
+    int count = 0;
+    int i=0,j=0;
+    while(count < dots){
+        net[i++] = s[j++];
+
+        if(s[j]=='.')
+            count++;
+    }
+    net[i] = '\0';
+    i = 0;
+    j++;
+    while(j<strlen(s)){
+        host[i++] = s[j++];
+    }
+
+    host[i] = '\0';
+
+    printf("Network ID: %s\nHost ID: %s\n", host,net);
+}
 char class(char s[]){
+    int n = strlen(s);
+
+
     int i = 0;
+    int mul = 1;
     while(s[i]!='.'){
         i++;
     }
+
     i--;
-    int num = 0, mul = 1;
+
+    int num = 0;
     while(i>=0){
-        num = num + (s[i--]-'0')*mul;
+        num = num + (s[i--]-'0') * mul;
         mul*= 10;
     }
 
     if(num>=0 && num<=127){
         return 'A';
-    } else if(num>=128 && num<= 191){
+    } else if(num>=128 && num<=191){
         return 'B';
     } else if(num>=192 && num<= 223){
         return 'C';
-    } else if(num>=223 && num<=239){
+    } else if(num>= 224 && num<= 239){
         return 'D';
-    } else if(num>=240 && num<=255){
-        return 'E';
-    }
-}
-void f(char s[], char c){
-    char net[12], host[12];
-    int i=0,j=0;
-    if(c=='A'){
-        while(s[j]!='.'){
-            net[i++] = s[j++];
-        }
-        net[i] = '\0';
-        i = 0;
-        j++;
-        while(s[j]!='\0'){
-            host[i++] = s[j++];
-        }
-
-        host[i] = '\0';
-
-        printf("Network ID: %s\nHost ID: %s\n",net,host);
-    } else if(c=='B' || c=='C'){
-        int dots = c-'A' + 1;
-        int count = 0;
-
-        while(count < dots){
-            net[i++] = s[j++];
-            if(s[j]=='.')
-                count++;
-        }
-        j++;
-        net[i] = '\0';
-        i = 0;
-        while(j < strlen(s)){
-            host[i++] = s[j++];
-        }
-        host[i] = '\0';
-        printf("Network ID: %s\nHost ID: %s\n",net,host);
-    } else printf("No seperation of Network ID and Host ID");
+    } else return 'E';
 }
 int main(void){
+    char ip[20];
+    printf("Enter IP: \n");
+    scanf(" %s",ip);
 
-    while(1){
-        char ip[20];
-        printf("Enter IP address: \n");
 
-        scanf(" %s",&ip);
+    char c = class(ip);
 
-        char c = class(ip);
+    printf("Class is %c\n", c);
 
-        printf("Class of IP: %c\n",c);
-        f(ip,c);
-    }
+    f(c,ip);
 }
