@@ -1,21 +1,26 @@
 import socket
 
-host = '127.0.0.1'
-port = 8500
 
-lk = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-lk.connect((host, port))
+def client_program():
+    host = socket.gethostname()
+    port = 5566
 
-while True:
-    data = input("Enter data ('q' to quit): ")
-    if data == 'q':
-        break
+    client_socket = socket.socket()
+    client_socket.connect((host, port))
 
-    lk.send(data.encode())
+    msg = input("Enter your string: \n")
 
-    response = lk.recv(1024)
+    while msg.lower().strip() != 'end':
+        client_socket.send(msg.encode())
 
-    if response != "":
-        print("Text received is:\n" + response.decode())
+        data = client_socket.recv(1024).decode()
 
-lk.close()
+        print("Message recieved from server: \n" + data)
+
+        msg = input("Enter your string: \n")
+
+    client_socket.close()
+
+
+if __name__ == '__main__':
+    client_program()

@@ -1,25 +1,31 @@
 import socket
 
-host = '127.0.0.1'
-port = 8500
 
-lk = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-lk.bind((host, port))
+def server_program():
+    host = socket.gethostname()
+    port = 5566
 
-lk.listen()  # Start listening for client connections
+    server_socket = socket.socket()
+    server_socket.bind((host, port))
 
-while True:
-    client, address = lk.accept()
-    print("Connected to client:", address)
+    server_socket.listen(2)
+
+    conn, addr = server_socket.accept()
+
+    print("Connected to " + str(addr))
 
     while True:
-        response = client.recv(1024)
+        data = conn.recv(1024).decode()
 
-        if not response:
+        if not data:
             break
+        else:
+            print("Message from client: \n" + data)
+            data = data.upper()
+            conn.send(data.encode())
 
-        print("Text received is:\n" + response.decode())
-        upper_response = response.decode().upper()
-        client.send(upper_response.encode())
+    conn.close()
 
-    client.close()
+
+if __name__ == '__main__':
+    server_program()
